@@ -61,9 +61,8 @@ const EmployeeForm = ({
       if (vCalculo < 10) {
         vnTotal += vCalculo
       } else {
-        vnTotal +=
-          parseInt(vCalculo.toString().substring(0, 1)) +
-          parseInt(vCalculo.toString().substring(1, 1))
+        let vCalArr = vCalculo.toString().split('')
+        vnTotal += Number(vCalArr[0]) + Number(vCalArr[1])
       }
     }
 

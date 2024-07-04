@@ -34,6 +34,8 @@ const SupplierForm = ({
 }) => {
   const [newElement, setNewElement] = useState(element)
   const [isLoading, setIsLoading] = useState(false)
+  const [isValidRNC, setIsValidRNC] = useState('')
+
   // Handle the button disabled state based on the new element state
   const isButtonDisabled =
     Object.values(newElement)?.some((value) => !value) ||
@@ -51,9 +53,50 @@ const SupplierForm = ({
   }
 
   // Handle the form submit
-  const onSubmit = async (element) => {
+  const onSubmit = async () => {
+    const isValid = validaRNC(newElement?.rnc || '')
+    console.log(isValid)
+    setIsValidRNC(isValid)
+    if (!isValid) return
     isEditing ? update() : create()
   }
+  function validaRNC(rnc) {
+    const peso = [7, 9, 8, 6, 5, 4, 3, 2];
+    let suma = 0;
+    let division = 0;
+
+    if (rnc.length !== 9) {
+        return false;
+    } else {
+        for (let i = 0; i < 8; i++) {
+            // Para verificar si es un dígito o no
+            if (!/^\d$/.test(rnc[i])) {
+                return false;
+            }
+
+            suma += parseInt(rnc[i], 10) * peso[i];
+        }
+
+        division = Math.floor(suma / 11);
+        const resto = suma - (division * 11);
+        let digito = 0;
+
+        if (resto === 0) {
+            digito = 2;
+        } else if (resto === 1) {
+            digito = 1;
+        } else {
+            digito = 11 - resto;
+        }
+
+        if (digito !== parseInt(rnc[8], 10)) {
+            return false;
+        }
+    }
+
+    return true;
+  }
+
 
   const create = async () => {
     try {
@@ -106,6 +149,8 @@ const SupplierForm = ({
         defaultValue={element?.rnc || ''}
         onChange={handleInputChange}
       />
+      {isValidRNC === false && <p>RNC Invalido</p>}
+
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
         <BasicButton
           type="submit"
