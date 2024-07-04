@@ -28,8 +28,8 @@ const Login = ({ setSelectedItem }) => {
   return (
     <Container maxWidth="sm">
       <Box mt={5}>
-        <Typography variant="h4" gutterBottom>
-          Login
+        <Typography textAlign="center" variant="h4" gutterBottom>
+          Iniciar Sesion
         </Typography>
         <form onSubmit={handleSubmit}>
           <TextField
@@ -53,7 +53,7 @@ const Login = ({ setSelectedItem }) => {
             </Typography>
           )}
           <Button type="submit" variant="contained" color="primary" fullWidth>
-            Login
+            Iniciar Sesion
           </Button>
           <Box mt={2}>
             <Typography variant="body2">

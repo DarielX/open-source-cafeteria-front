@@ -21,6 +21,8 @@ const UserForm = ({
   const [isLoading, setIsLoading] = useState(false)
   const [isLoadingUserType, setIsLoadingUserType] = useState(false)
   const [userTypeList, setUserTypeList] = useState([])
+  const [isValidCedula, setIsValidCedula] = useState('')
+
   // Handle the button disabled state based on the new element state
   const isButtonDisabled =
     Object.values(newElement)?.some((value) => !value) ||
@@ -38,8 +40,37 @@ const UserForm = ({
   }
 
   // Handle the form submit
-  const onSubmit = async (element) => {
+  const onSubmit = async () => {
+    const isValid = validaCedula(newElement?.cedula || '')
+    console.log(isValid)
+    setIsValidCedula(isValid)
+    if (!isValid) return
     isEditing ? update() : create()
+  }
+
+  function validaCedula(pCedula) {
+    console.log(pCedula)
+    let vnTotal = 0
+    let vcCedula = pCedula.replace(/-/g, '')
+    let pLongCed = vcCedula.trim().length
+    let digitoMult = [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1]
+
+    if (pLongCed !== 11 ) {
+      return false
+    }
+
+    for (let vDig = 1; vDig <= pLongCed; vDig++) {
+      let vCalculo =
+        parseInt(vcCedula.substring(vDig - 1, vDig)) * digitoMult[vDig - 1]
+      if (vCalculo < 10) {
+        vnTotal += vCalculo
+      } else {
+        let vCalArr = vCalculo.toString().split('')
+        vnTotal += Number(vCalArr[0]) + Number(vCalArr[1])
+      }
+    }
+
+    return vnTotal % 10 === 0
   }
 
   const create = async () => {
@@ -110,6 +141,8 @@ const UserForm = ({
         defaultValue={element?.cedula || ''}
         onChange={handleInputChange}
       />
+      {isValidCedula === false && <p>Cedula Invalida</p>}
+
       <BasicInput
         label={'Limite de credito'}
         type="number"
