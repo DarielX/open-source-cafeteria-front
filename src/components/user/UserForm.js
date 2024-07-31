@@ -33,10 +33,35 @@ const UserForm = ({
   const handleInputChange = (event) => {
     const { name, value } = event.target
 
+    // Evitar números negativos para "Limite de credito"
+    if (name === 'creditLimit' && (value < 0 || value === '-')) {
+      if (value === '-') {
+        setNewElement((prevState) => ({
+          ...prevState,
+          [name]: value,
+        }));
+      } else {
+        setNewElement((prevState) => ({
+          ...prevState,
+          [name]: '',
+        }));
+      }
+      return;
+    }
+
     setNewElement((prevState) => ({
       ...prevState,
       [name]: value,
     }))
+  }
+
+  // Prevent negative values in the credit limit field
+  const handleKeyPress = (event) => {
+    if (event.key === '-' && event.target.name === 'creditLimit') {
+      if (event.target.value.length > 0) {
+        event.preventDefault();
+      }
+    }
   }
 
   // Handle the form submit
@@ -151,6 +176,8 @@ const UserForm = ({
         //disabled={query === 'exchangeRate'}
         defaultValue={element?.creditLimit || ''}
         onChange={handleInputChange}
+        onKeyPress={handleKeyPress}
+        min="0" // Añadido para evitar números negativos
       />
       <BasicSelect
         name="userTypeId"

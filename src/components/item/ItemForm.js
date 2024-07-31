@@ -33,10 +33,35 @@ const ItemForm = ({
   const handleInputChange = (event) => {
     const { name, value } = event.target
 
+        // Evitar números negativos para "Costo" y "Existencia"
+    if ((name === 'cost' || name === 'stock') && (value < 0 || value === '-')) {
+      if (value === '-') {
+        setNewElement((prevState) => ({
+          ...prevState,
+          [name]: value,
+        }))
+      } else {
+        setNewElement((prevState) => ({
+          ...prevState,
+          [name]: '',
+        }))
+      }
+      return
+    }
+    
+
     setNewElement((prevState) => ({
       ...prevState,
       [name]: value,
     }))
+  }
+    // Prevent negative values in the cost and stock fields
+  const handleKeyPress = (event) => {
+    if (event.key === '-' && (event.target.name === 'cost' || event.target.name === 'stock')) {
+      if (event.target.value.length > 0) {
+        event.preventDefault()
+      }
+    }
   }
 
   // Handle the form submit
@@ -161,6 +186,8 @@ const ItemForm = ({
         //disabled={query === 'exchangeRate'}
         defaultValue={element?.cost || ''}
         onChange={handleInputChange}
+        onKeyPress={handleKeyPress}
+        min="0" // Añadido para evitar números negativos
       />
       <BasicInput
         label={'Existencia'}
@@ -170,6 +197,8 @@ const ItemForm = ({
         //disabled={query === 'exchangeRate'}
         defaultValue={element?.stock || ''}
         onChange={handleInputChange}
+        onKeyPress={handleKeyPress}
+        min="0" // Añadido para evitar números negativos
       />
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
         <BasicButton
