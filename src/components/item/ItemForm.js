@@ -28,11 +28,16 @@ const ItemForm = ({
     Object.values(newElement)?.some((value) => !value) ||
     Object.values(newElement)?.some((value) => !value.toString().trim()) ||
     !Object.values(newElement)?.length
-
+  
+  const [cost, setCost] = useState('');
+  
   // Handle the input change
   const handleInputChange = (event) => {
     const { name, value } = event.target
-
+    if (name === 'cost') {
+      setCost(value); // Actualiza el estado con el nuevo valor
+    }
+  
         // Evitar números negativos para "Costo" y "Existencia"
     if ((name === 'cost' || name === 'stock') && (value < 0 || value === '-')) {
       if (value === '-') {
@@ -41,20 +46,20 @@ const ItemForm = ({
           [name]: value,
         }))
       } else {
-        setNewElement((prevState) => ({
-          ...prevState,
-          [name]: '',
+      setNewElement((prevState) => ({
+        ...prevState,
+        [name]: '',
         }))
       }
       return
     }
-    
+  
 
-    setNewElement((prevState) => ({
-      ...prevState,
+      setNewElement((prevState) => ({
+        ...prevState,
       [name]: value,
     }))
-  }
+    }
     // Prevent negative values in the cost and stock fields
   const handleKeyPress = (event) => {
     if (event.key === '-' && (event.target.name === 'cost' || event.target.name === 'stock')) {
@@ -183,8 +188,7 @@ const ItemForm = ({
         required
         name="cost"
         type="number"
-        //disabled={query === 'exchangeRate'}
-        defaultValue={element?.cost || ''}
+        value={cost} // Usa el estado aquí
         onChange={handleInputChange}
         onKeyPress={handleKeyPress}
         min="0" // Añadido para evitar números negativos

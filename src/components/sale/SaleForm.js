@@ -32,9 +32,14 @@ const SaleForm = ({
     Object.values(newElement)?.some((value) => !value.toString().trim()) ||
     !Object.values(newElement)?.length
 
+    const [cost, setCost] = useState('');
   // Handle the input change
   const handleInputChange = (event) => {
     const { name, value } = event.target
+
+    if (name === 'cost') {
+      setCost(value); // Actualiza el estado con el nuevo valor
+    }
 
     setNewElement((prevState) => ({
       ...prevState,
@@ -127,7 +132,7 @@ const SaleForm = ({
     getEmployees()
     getItems()
     getUsers()
-  }, [])
+  }, [element])
 
   return (
     <Box>
@@ -175,9 +180,8 @@ const SaleForm = ({
         required
         name="cost"
         type="number"
-        //disabled={query === 'exchangeRate'}
-        defaultValue={newElement?.itemId?.cost || ''}
-        onChange={handleInputChange}
+        value={cost} // Usa el mismo estado aquí
+        readOnly // Hace que este campo sea de solo lectura
       />
       <BasicInput
         label={'Unidades Vendidas'}

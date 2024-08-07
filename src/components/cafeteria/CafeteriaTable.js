@@ -34,7 +34,7 @@ const CafeteriaTable = (props) => {
     },
     {
       name: 'Encargado',
-      selector: (campus) => campus.description,
+      selector: (campus) => campus.encargado,
       width: 130,
     },
     {

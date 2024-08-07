@@ -29,10 +29,21 @@ const EmployeeForm = ({
   const handleInputChange = (event) => {
     const { name, value } = event.target
 
-    setNewElement((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }))
+    if (name === 'commissionPercentage') {
+      let numericValue = parseFloat(value.replace('%', ''))
+      if (isNaN(numericValue) || numericValue < 0) {
+        numericValue = 0
+      }
+      setNewElement((prevState) => ({
+        ...prevState,
+        [name]: `${numericValue}%`,
+      }))
+    } else {
+      setNewElement((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }))
+    }
   }
 
   // Handle the form submit
@@ -136,7 +147,7 @@ const EmployeeForm = ({
         name="commissionPercentage"
         //disabled={query === 'exchangeRate'}
         defaultValue={element?.commissionPercentage || ''}
-        onChange={handleInputChange}
+        onChange={handleInputChange}  
       />
       <BasicInput
         label={'Fecha Ingreso'}

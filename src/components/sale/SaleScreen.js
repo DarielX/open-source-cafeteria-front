@@ -6,9 +6,13 @@ import BasicIconButton from '../../shared/Basic/BasicIconButton'
 import BasicModal from '../../shared/Basic/BasicModal'
 import SaleTable from './SaleTable'
 import SaleForm from './SaleForm'
+import { saveAs } from 'file-saver'
+import * as XLSX from 'xlsx'
+import { SaveAlt } from '@mui/icons-material'
 
 const SaleScreen = () => {
   const [open, setOpen] = useState(false)
+  // eslint-disable-next-line
   const [modalType, setModalType] = useState('add')
   const [editData, setEditData] = useState({})
   const [refresh, setRefresh] = useState(false)
@@ -20,6 +24,27 @@ const SaleScreen = () => {
     setModalType(mt)
     setEditData(camp)
     setIsEditing(true)
+  }
+  const exportToExcel = () => {
+    const dataToExport = data.map((x) => ({
+      Factura: x.id,
+      Articulo: x?.itemId?.description || '',
+      Empleado: x?.employeeId?.name || '',
+      Cliente: x?.userId?.name || '',
+      Unidades: x?.units || '',
+      Monto: x?.itemId?.cost || '',
+      Fecha_Venta: x?.createdAt || '',
+      Comentario: x?.comment || '',
+    }))
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport)
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1')
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    })
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' })
+    saveAs(blob, "ventas.xlsx")
   }
 
   const getCafeterias = async () => {
@@ -63,6 +88,7 @@ const SaleScreen = () => {
         }}
       >
         <h2>Gestión de Ventas</h2>
+        <Box sx={{ display: 'flex', gap: 2 }}>
         <BasicIconButton
           onClick={() => {
             setModalType('add')
@@ -70,8 +96,19 @@ const SaleScreen = () => {
           }}
           title={'Agregar'}
         >
-          <Add sx={{ color: 'white' }} />
+          <Add sx={{ color: 'white' }} />      
         </BasicIconButton>
+        <BasicIconButton
+          onClick={() => {
+            exportToExcel()
+
+          }}
+          title={'EXPORTA A EXCEL'}
+        >
+          <SaveAlt sx={{ color: 'white'}} />
+        </BasicIconButton>
+        </Box>
+
       </Box>
       <SaleTable
         data={data}
