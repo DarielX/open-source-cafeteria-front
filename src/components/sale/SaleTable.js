@@ -34,7 +34,7 @@ const SaleTable = (props) => {
     },
     {
       name: 'Articulo',
-      selector: (campus) => campus.itemId.description,
+      selector: (campus) => campus.itemId.description + " " + campus.itemId?.brandId?.description,
       width: 130,
     },
     {

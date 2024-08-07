@@ -28,7 +28,7 @@ const SaleScreen = () => {
   const exportToExcel = () => {
     const dataToExport = data.map((x) => ({
       Factura: x.id,
-      Articulo: x?.itemId?.description || '',
+      Articulo: x?.itemId?.description + " " + x?.itemId?.brandId?.description || '',
       Empleado: x?.employeeId?.name || '',
       Cliente: x?.userId?.name || '',
       Unidades: x?.units || '',

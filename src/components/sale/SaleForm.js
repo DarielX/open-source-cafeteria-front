@@ -158,7 +158,7 @@ const SaleForm = ({
       >
         {itemList?.map((item) => (
           <MenuItem key={item.id} value={item.id}>
-            {item?.description}
+            {item?.description + " " + item?.brandId?.description}
           </MenuItem>
         ))}
       </BasicSelect>
